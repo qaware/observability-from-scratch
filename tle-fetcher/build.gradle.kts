@@ -14,17 +14,14 @@ val quarkusPlatformVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
-    implementation("io.quarkus:quarkus-smallrye-opentracing")
     implementation("io.quarkus:quarkus-rest-client-jsonb")
-    implementation("io.quarkus:quarkus-micrometer-registry-prometheus")
     implementation("io.quarkus:quarkus-rest-client")
     implementation("io.quarkus:quarkus-resteasy-jsonb")
     implementation("io.quarkus:quarkus-resteasy")
-    implementation("io.quarkus:quarkus-logging-json")
     implementation("io.quarkus:quarkus-smallrye-health")
-    implementation("io.quarkus:quarkus-micrometer")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-container-image-jib")
+    implementation("io.quarkus:quarkus-smallrye-openapi")
 
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")
