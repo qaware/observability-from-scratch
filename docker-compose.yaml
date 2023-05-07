@@ -9,8 +9,22 @@ services:
     networks:
       - default
 
+  sky-map:
+    image: qaware/sky-map:1.0.0
+    environment:
+      - QUARKUS_REST_CLIENT_TLE_FETCHER_URL=http://tle-fetcher:8080
+    depends_on:
+      - tle-fetcher
+    ports:
+      - "8088:8088"
+    volumes:
+      - sky_map_logs:/logs
+    networks:
+      - default
+
 volumes:
   tle_fetcher_logs: {}
+  sky_map_logs: {}
 
 networks:
   default:

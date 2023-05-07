@@ -12,5 +12,5 @@ pluginManagement {
 }
 rootProject.name="observability-from-scratch"
 include("tle-fetcher")
-//include("sky-map")
+include("sky-map")
 
