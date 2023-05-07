@@ -14,12 +14,24 @@ public class SatPosCalculator {
     @Inject
     TleParser tleParser;
 
+    public SatPassTime getNextPass(TleMember tleRecord) throws SatNotFoundException {
+        PassPredictor passPredictor = getPassPredictor(tleRecord);
+        return passPredictor.nextSatPass(getNow());
+    }
+
     public SatPos getSatPos(TleMember tleRecord) throws SatNotFoundException {
+        PassPredictor passPredictor = getPassPredictor(tleRecord);
+        return passPredictor.getSatPos(getNow());
+    }
+
+    private PassPredictor getPassPredictor(TleMember tleRecord) throws SatNotFoundException {
         TLE tle = tleParser.parseTLE(tleRecord);
         GroundStationPosition groundStationPosition = new GroundStationPosition(47, 12, 400, "Rosenheim");
-        PassPredictor passPredictor = new PassPredictor(tle, groundStationPosition);
-        SatPos satPos = passPredictor.getSatPos(Date.valueOf(LocalDate.now()));
-        return satPos;
+        return new PassPredictor(tle, groundStationPosition);
+    }
+
+    private static Date getNow() {
+        return Date.valueOf(LocalDate.now());
     }
 
 }

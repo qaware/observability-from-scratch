@@ -46,13 +46,26 @@ public class SatelliteResource {
 
     @GET
     @WithSpan
-    @Path("/{satelliteId}")
-    public RestResponse<SatPos> getPrediction(@PathParam("satelliteId") @SpanAttribute int satelliteId) {
+    @Path("/{satelliteId}/pass/next")
+    public RestResponse<SatPassTime> getNextPass(@PathParam("satelliteId") @SpanAttribute int satelliteId) {
+        try {
+            TleMember tleRecord = tleClient.getRecord(satelliteId);
+            logResponse(tleRecord);
+            return RestResponse.ok(satPosCalculator.getNextPass(tleRecord));
+        } catch (Exception e) {
+            log.error(e);
+            return RestResponse.serverError();
+        }
+    }
+
+    @GET
+    @WithSpan
+    @Path("/{satelliteId}/pos")
+    public RestResponse<SatPos> getSatPosition(@PathParam("satelliteId") @SpanAttribute int satelliteId) {
         try {
             TleMember tleRecord = tleClient.getRecord(satelliteId);
             logResponse(tleRecord);
             SatPos satPos = satPosCalculator.getSatPos(tleRecord);
-            log(satPos);
             return RestResponse.ok(satPos);
         } catch (Exception e) {
             log.error(e);
@@ -64,9 +77,4 @@ public class SatelliteResource {
         log.info(tleMember);
 
     }
-
-    private void log(SatPos satPos) {
-        log.info(satPos);
-    }
-
 }
