@@ -1,18 +1,11 @@
 package de.qaware.cloudcomputing.satellite;
 
-import com.github.amsacode.predict4java.*;
+import com.github.amsacode.predict4java.SatPassTime;
+import com.github.amsacode.predict4java.SatPos;
 import de.qaware.cloudcomputing.parser.SatPosCalculator;
-import de.qaware.cloudcomputing.parser.TleParser;
 import de.qaware.cloudcomputing.tle.TleClient;
 import de.qaware.cloudcomputing.tle.TleMember;
-import io.opentelemetry.instrumentation.annotations.SpanAttribute;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
-import io.smallrye.mutiny.Uni;
-import lombok.Data;
 import lombok.extern.jbosslog.JBossLog;
-import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
-import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
-import org.apache.commons.math3.geometry.euclidean.threed.SphericalCoordinates;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -23,13 +16,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
-
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.AbstractMap;
-import java.util.Map;
-
-import static org.apache.commons.math3.geometry.euclidean.threed.Vector3D.PLUS_J;
 
 @JBossLog
 @Consumes(MediaType.APPLICATION_JSON)
@@ -45,9 +31,8 @@ public class SatelliteResource {
     SatPosCalculator satPosCalculator;
 
     @GET
-    @WithSpan
     @Path("/{satelliteId}/pass/next")
-    public RestResponse<SatPassTime> getNextPass(@PathParam("satelliteId") @SpanAttribute int satelliteId) {
+    public RestResponse<SatPassTime> getNextPass(@PathParam("satelliteId") int satelliteId) {
         try {
             TleMember tleRecord = tleClient.getRecord(satelliteId);
             logResponse(tleRecord);
@@ -59,9 +44,8 @@ public class SatelliteResource {
     }
 
     @GET
-    @WithSpan
     @Path("/{satelliteId}/pos")
-    public RestResponse<SatPos> getSatPosition(@PathParam("satelliteId") @SpanAttribute int satelliteId) {
+    public RestResponse<SatPos> getSatPosition(@PathParam("satelliteId") int satelliteId) {
         try {
             TleMember tleRecord = tleClient.getRecord(satelliteId);
             logResponse(tleRecord);
