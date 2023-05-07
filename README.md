@@ -19,3 +19,25 @@ $ docker images
 REPOSITORY           TAG     IMAGE ID       CREATED         SIZE
 qaware/tle-fetcher   1.0.0   55bd6d637c77   7 seconds ago   371MB
 ```
+
+### Testing the tle-fetcher application
+
+#### Running the service
+
+You can start the tle-fetcher application in quarkus-developter mode by 
+
+```shell
+$  ./gradlew :tle-fetcher:quarkusDev
+```
+
+To start onle the tle-fetcher with docker compose you can use
+
+```shell
+$ docker-compose up -d tle-fetcher
+```
+
+#### API
+
+The service runs on port ```8080```. You can view the tle-fetcher service api with swagger: http://localhost:8080/q/swagger-ui/
+
+
