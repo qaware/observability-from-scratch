@@ -5,6 +5,7 @@ import com.github.amsacode.predict4java.SatPos;
 import de.qaware.cloudcomputing.parser.SatPosCalculator;
 import de.qaware.cloudcomputing.tle.TleClient;
 import de.qaware.cloudcomputing.tle.TleMember;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.jbosslog.JBossLog;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -32,6 +33,7 @@ public class SatelliteResource {
 
     @GET
     @Path("/{satelliteId}/pass/next")
+    @WithSpan
     public RestResponse<SatPassTime> getNextPass(@PathParam("satelliteId") int satelliteId) {
         try {
             TleMember tleRecord = tleClient.getRecord(satelliteId);
@@ -45,6 +47,7 @@ public class SatelliteResource {
 
     @GET
     @Path("/{satelliteId}/pos")
+    @WithSpan
     public RestResponse<SatPos> getSatPosition(@PathParam("satelliteId") int satelliteId) {
         try {
             TleMember tleRecord = tleClient.getRecord(satelliteId);

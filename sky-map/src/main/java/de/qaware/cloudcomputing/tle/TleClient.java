@@ -1,5 +1,7 @@
 package de.qaware.cloudcomputing.tle;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.ws.rs.GET;
@@ -12,5 +14,6 @@ public interface TleClient {
 
     @GET
     @Path("/{satelliteId}")
-    TleMember getRecord(@PathParam("satelliteId") int satelliteId);
+    @WithSpan
+    TleMember getRecord(@PathParam("satelliteId") @SpanAttribute int satelliteId);
 }

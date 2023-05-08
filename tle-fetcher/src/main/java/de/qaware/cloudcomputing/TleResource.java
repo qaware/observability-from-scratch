@@ -3,6 +3,7 @@ package de.qaware.cloudcomputing;
 import de.qaware.cloudcomputing.tle.TleMember;
 import de.qaware.cloudcomputing.tle.TleSearchResult;
 import de.qaware.cloudcomputing.tle.TleService;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.jbosslog.JBossLog;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
@@ -24,6 +25,7 @@ public class TleResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @WithSpan
     public TleSearchResult search(@QueryParam("searchString") String searchString) {
         log.tracev("Processing request GET /tle?searchString with parameter {0}", searchString);
 
@@ -36,6 +38,7 @@ public class TleResource {
 
     @GET
     @Path("/{satelliteId}")
+    @WithSpan
     public TleMember getRecord(@PathParam("satelliteId") int satelliteId) {
         log.tracev("Processing request GET /tle/{satelliteId} with parameter {0}", satelliteId);
 

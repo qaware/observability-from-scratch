@@ -31,15 +31,10 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
 
-    testCompileOnly("org.projectlombok:lombok:1.18.26")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
-
     implementation("com.github.davidmoten:predict4java:1.3.1")
-
     implementation("org.apache.commons:commons-math3:3.6.1")
 
-    testImplementation("io.quarkus:quarkus-junit5")
-    testImplementation("io.rest-assured:rest-assured")
+    implementation("io.quarkus:quarkus-opentelemetry")
 }
 
 group = "de.qaware.cloudcomputing"

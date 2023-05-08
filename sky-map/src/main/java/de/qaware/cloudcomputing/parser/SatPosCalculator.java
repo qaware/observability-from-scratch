@@ -2,6 +2,7 @@ package de.qaware.cloudcomputing.parser;
 
 import com.github.amsacode.predict4java.*;
 import de.qaware.cloudcomputing.tle.TleMember;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -14,11 +15,13 @@ public class SatPosCalculator {
     @Inject
     TleParser tleParser;
 
+    @WithSpan
     public SatPassTime getNextPass(TleMember tleRecord) throws SatNotFoundException {
         PassPredictor passPredictor = getPassPredictor(tleRecord);
         return passPredictor.nextSatPass(getNow());
     }
 
+    @WithSpan
     public SatPos getSatPos(TleMember tleRecord) throws SatNotFoundException {
         PassPredictor passPredictor = getPassPredictor(tleRecord);
         return passPredictor.getSatPos(getNow());

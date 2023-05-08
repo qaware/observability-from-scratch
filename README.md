@@ -11,6 +11,17 @@ To build and run this application, you will need the following dependencies on y
 | Docker-Compose | 1.13.0+ |
 | Java           | 17      |
 
+## Running all services
+
+Build and run the applications with `docker-compose`:
+
+```shell
+$ ./gradlew build
+$ docker-compose up
+```
+
+You can access the grafana-ui at http://localhost:3000/login.
+The username is ```admin```, the password is ```password123```.
 
 ## Java services
 
@@ -38,7 +49,7 @@ qaware/tle-fetcher   1.0.0   55bd6d637c77   12 seconds ago  371MB
 qaware/sky-map       1.0.0   76c9807e0e3c   19 seconds ago  395MB
 ```
 
-### Testing the tle-fetcher application
+### The tle-fetcher application
 
 #### Running the service
 
@@ -48,7 +59,7 @@ You can start the tle-fetcher application in quarkus-developter mode by
 $  ./gradlew :tle-fetcher:quarkusDev
 ```
 
-To start onle the tle-fetcher with docker compose you can use
+or with docker compose 
 
 ```shell
 $ docker-compose up -d tle-fetcher
@@ -62,7 +73,7 @@ The service runs on port ```8080```. You can view the tle-fetcher service api wi
 
 All relevant configuration can be found in `tle-fetcher/src/main/resources/application.properties`.
 
-### Testing the sky-map application
+### The sky-map application
 
 #### Running the service
 
@@ -72,7 +83,7 @@ You can start the tle-fetcher application in quarkus-developter mode by
 $  ./gradlew :sky-map:quarkusDev
 ```
 
-To start onle the tle-fetcher with docker compose you can use
+or with docker compose 
 
 ```shell
 $ docker-compose up -d sky-map
@@ -87,3 +98,26 @@ The service runs on port ```8088```. You can view the tle-fetcher service api wi
 #### Configuration
 
 All relevant configuration can be found in `sky-map/src/main/resources/application.properties`.
+
+
+## The Grafana stack
+
+The Grafana stack is configured in the directories `grafana`, `loki`, `promtail`, `prometheus` and `tempo`.
+
+**NOTE**: It is important to change the permissions on the configuration files for the Grafana stack. Run the following command:
+
+```shell
+$ chmod -R o+rX grafana loki prometheus promtail tempo
+```
+
+### Grafana
+
+Grafana is the visualization engine of the Grafana stack.
+
+The main configuration is done in `grafana.ini`.
+
+You can provision several other things automatically, like dashboards and datasources. All of this is stored in `grafana/provisioning` and deployed automatically on startup.
+
+### Tempo
+
+Tempo stores APM and tracing data from services. It can also be connected to Grafana.
