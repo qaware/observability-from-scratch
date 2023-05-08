@@ -22,9 +22,22 @@ services:
     networks:
       - default
 
+  grafana:
+    image: grafana/grafana:9.3.6
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/dashboards:/var/lib/grafana/dashboards/
+    networks:
+      - default
+
 volumes:
   tle_fetcher_logs: {}
   sky_map_logs: {}
+  grafana_data: {}
 
 networks:
   default:
