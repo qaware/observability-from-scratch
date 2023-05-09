@@ -2,6 +2,8 @@ version: "3"
 services:
   tle-fetcher:
     image: qaware/tle-fetcher:1.0.0
+    depends_on:
+      - promtail
     ports:
       - "8080:8080"
     volumes:
@@ -15,6 +17,7 @@ services:
       - QUARKUS_REST_CLIENT_TLE_FETCHER_URL=http://tle-fetcher:8080
     depends_on:
       - tle-fetcher
+      - promtail
     ports:
       - "8088:8088"
     volumes:
@@ -34,10 +37,33 @@ services:
     networks:
       - default
 
+  loki:
+    image: grafana/loki:2.7.3
+    command:
+      - '-config.file=/etc/loki/local-config.yaml'
+    volumes:
+      - loki_data:/loki
+    networks:
+      - default
+
+  promtail:
+    image: grafana/promtail:2.7.3
+    depends_on:
+      - loki
+    command:
+      - '-config.file=/etc/promtail/promtail.yaml'
+    volumes:
+      - ./promtail:/etc/promtail
+      - tle_fetcher_logs:/tle-fetcher-logs
+      - sky_map_logs:/sky-map-logs
+    networks:
+      - default
+
 volumes:
   tle_fetcher_logs: {}
   sky_map_logs: {}
   grafana_data: {}
+  loki_data: {}
 
 networks:
   default:
