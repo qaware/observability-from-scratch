@@ -26,6 +26,8 @@ dependencies {
     implementation("io.quarkus:quarkus-smallrye-openapi")
     implementation("io.quarkus:quarkus-logging-json")
 
+    implementation("io.quarkus:quarkus-micrometer-registry-prometheus")
+
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
 

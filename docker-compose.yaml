@@ -59,11 +59,65 @@ services:
     networks:
       - default
 
+  mimir:
+    image: grafana/mimir:2.8.0
+    command: ["-config.file=/etc/mimir.yaml"]
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+      - mimir_data:/mimir
+      - ./mimir/metrics-activity.log:/var/log/mimir/metrics-activity.log
+
+  minio:
+    image: minio/minio:RELEASE.2023-02-17T17-52-43Z.hotfix.aae0ae859
+    entrypoint: [""]
+    command: ["sh", "-c", "mkdir -p /data/mimir && minio server --quiet /data"]
+    depends_on:
+      - createbuckets
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=password123
+    volumes:
+      - minio_blocks:/data
+
+  createbuckets:
+    image: minio/mc
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add myminio http://minio:9000 root password123;
+      
+      /usr/bin/mc rm -r --force myminio/mimir-blocks;
+      /usr/bin/mc mb myminio/mimir-blocks;
+      /usr/bin/mc policy download myminio/mimir-blocks;
+      
+      /usr/bin/mc rm -r --force myminio/mimir-alertmanager;
+      /usr/bin/mc mb myminio/mimir-alertmanager;
+      /usr/bin/mc policy download myminio/mimir-alertmanager;
+      
+      /usr/bin/mc rm -r --force myminio/mimir-ruler;
+      /usr/bin/mc mb myminio/mimir-ruler;
+      /usr/bin/mc policy download myminio/mimir-ruler;
+      exit 0;
+      "
+
+  grafana-agent:
+    image: grafana/agent:v0.33.1
+    entrypoint: grafana-agent run /etc/grafana-agent.river --storage.path=/tmp/data-agent
+    environment:
+      - AGENT_MODE=flow
+    volumes:
+      - ./grafana-agent/grafana-agent.river:/etc/grafana-agent.river
+      - grafana-agent-data-agent:/tmp/data-agent
+
 volumes:
   tle_fetcher_logs: {}
   sky_map_logs: {}
   grafana_data: {}
+  grafana-agent-data-agent: {}
   loki_data: {}
+  mimir_data: {}
+  minio_blocks: {}
 
 networks:
   default:
